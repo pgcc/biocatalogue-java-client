@@ -24,6 +24,8 @@
 package br.ufjf.biocatalogue.sample;
 
 import br.ufjf.biocatalogue.core.BioCatalogueClient;
+import br.ufjf.biocatalogue.model.Result;
+import br.ufjf.biocatalogue.model.Search;
 
 /**
  *
@@ -37,7 +39,11 @@ public class Samples {
         client.setBaseUri("https://www.biocatalogue.org");
         
         try {
-            client.search("fasta");
+            Search search = client.search("fasta");
+            System.out.println(search.getSearch_query());
+            for (Result result : search.getResults()) {
+                System.out.println(result.getName());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

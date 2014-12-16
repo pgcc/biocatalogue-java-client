@@ -29,4 +29,20 @@ package br.ufjf.biocatalogue.model;
  */
 public class SearchResult {
     
+    private Search search;
+
+    /**
+     * @return the search
+     */
+    public Search getSearch() {
+        return search;
+    }
+
+    /**
+     * @param search the search to set
+     */
+    public void setSearch(Search search) {
+        this.search = search;
+    }
+    
 }

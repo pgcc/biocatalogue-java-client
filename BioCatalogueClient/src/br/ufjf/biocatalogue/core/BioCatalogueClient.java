@@ -24,6 +24,7 @@
 package br.ufjf.biocatalogue.core;
 
 import br.ufjf.biocatalogue.exception.BioCatalogueException;
+import br.ufjf.biocatalogue.model.Search;
 import br.ufjf.biocatalogue.model.SearchResult;
 import com.google.gson.Gson;
 import java.net.HttpURLConnection;
@@ -41,13 +42,13 @@ public class BioCatalogueClient extends BioCatalogueBaseClient implements BioCat
     }
 
     @Override
-    public SearchResult search(String q) throws BioCatalogueException {
+    public Search search(String q) throws BioCatalogueException {
         String url = "/search?q=" + q;
         HttpURLConnection response = request(url, "GET", 200, "application/json");
         String content = parseResponse(response);
         System.out.println(content);
-        SearchResult result = null;
-        return result;
+        SearchResult result = gson.fromJson(content, SearchResult.class);
+        return result.getSearch();
     }
     
     

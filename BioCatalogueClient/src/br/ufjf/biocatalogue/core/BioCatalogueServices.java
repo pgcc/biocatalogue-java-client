@@ -24,7 +24,7 @@
 package br.ufjf.biocatalogue.core;
 
 import br.ufjf.biocatalogue.exception.BioCatalogueException;
-import br.ufjf.biocatalogue.model.SearchResult;
+import br.ufjf.biocatalogue.model.Search;
 
 /**
  *
@@ -32,6 +32,6 @@ import br.ufjf.biocatalogue.model.SearchResult;
  */
 public interface BioCatalogueServices {
     
-    public SearchResult search(String q) throws BioCatalogueException;
+    public Search search(String q) throws BioCatalogueException;
     
 }
