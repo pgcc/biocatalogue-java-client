@@ -34,21 +34,13 @@ import java.net.HttpURLConnection;
  * @author vitorfs
  */
 public class BioCatalogueClient extends BioCatalogueBaseClient implements BioCatalogueServices {
-    
-    private Gson gson;
-    
-    public BioCatalogueClient() {
-        gson = new Gson();
-    }
 
     @Override
     public Search search(String q) throws BioCatalogueException {
         String url = "/search?q=" + q;
         HttpURLConnection response = request(url, "GET", 200, "application/json");
         String content = parseResponse(response);
-        SearchResult result = gson.fromJson(content, SearchResult.class);
+        SearchResult result = new Gson().fromJson(content, SearchResult.class);
         return result.getSearch();
     }
-    
-    
 }
