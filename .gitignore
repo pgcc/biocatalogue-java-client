@@ -1,2 +1,4 @@
 /BioCatalogueClient/nbproject/private/
 /BioCatalogueClient/build/
+/BioCatalogueClient/dist/
+.DS_Store
