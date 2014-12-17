@@ -46,7 +46,6 @@ public class BioCatalogueClient extends BioCatalogueBaseClient implements BioCat
         String url = "/search?q=" + q;
         HttpURLConnection response = request(url, "GET", 200, "application/json");
         String content = parseResponse(response);
-        System.out.println(content);
         SearchResult result = gson.fromJson(content, SearchResult.class);
         return result.getSearch();
     }
