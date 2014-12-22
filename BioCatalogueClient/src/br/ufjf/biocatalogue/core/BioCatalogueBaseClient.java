@@ -76,11 +76,11 @@ public abstract class BioCatalogueBaseClient {
                 connection.setRequestProperty("Content-Type", contentType);
             }
 
-            switch (method) {
-                case "GET":
-                    break;
-                case "POST":
-                    break;
+            if ("GET".equals(method)) {
+                
+            }
+            else if ("POST".equals(method)) {
+                
             }
             
             int responseCode = connection.getResponseCode();
