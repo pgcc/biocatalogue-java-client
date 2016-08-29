@@ -40,6 +40,9 @@ public class Result {
     private ArrayList<String> service_technology_types;
     private MonitoringStatus latest_monitoring_status;
     private String resource;
+    private double rating;
+    private double time;
+    private double ranking;    
 
     /**
      * @return the name
@@ -166,4 +169,47 @@ public class Result {
     public void setParameter_order(String parameter_order) {
         this.parameter_order = parameter_order;
     }
+
+    /**
+     * @return the rating
+     */
+    public double getRating() {
+        return rating;
+    }
+
+    /**
+     * @param rating the rating to set
+     */
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    /**
+     * @return the time
+     */
+    public double getTime() {
+        return time;
+    }
+
+    /**
+     * @param time the time to set
+     */
+    public void setTime(double time) {
+        this.time = time;
+    }
+
+    /**
+     * @return the ranking
+     */
+    public double getRanking() {
+        return ranking;
+    }
+
+    /**
+     * @param ranking the ranking to set
+     */
+    public void setRanking(double ranking) {
+        this.ranking = ranking;
+    }
+    
 }

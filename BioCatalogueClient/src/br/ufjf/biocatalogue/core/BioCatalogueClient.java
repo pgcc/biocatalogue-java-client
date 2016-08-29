@@ -29,8 +29,11 @@ import br.ufjf.biocatalogue.model.SearchResult;
 import br.ufjf.biocatalogue.model.ServiceData;
 import br.ufjf.biocatalogue.model.User;
 import com.google.gson.Gson;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -40,7 +43,7 @@ import org.json.simple.parser.ParseException;
  *
  * @author vitorfs
  */
-public class BioCatalogueClient extends BioCatalogueBaseClient implements BioCatalogueServices {
+public class BioCatalogueClient extends BioCatalogueBaseClient implements BioCatalogueServices,Serializable {
 
     @Override
     public Search search(String q) throws BioCatalogueException {
@@ -62,7 +65,12 @@ public class BioCatalogueClient extends BioCatalogueBaseClient implements BioCat
         String url = "/services/" + serviceId;
         HttpURLConnection response = request(url, "GET", 200, "application/json");
         String content = parseResponse(response);
-        JSONObject jsonPrimaryLevel = (JSONObject) new JSONParser().parse(content);
+        JSONObject jsonPrimaryLevel = null;
+        try {
+            jsonPrimaryLevel = (JSONObject) new JSONParser().parse(content);
+        } catch (ParseException ex) {
+            Logger.getLogger(BioCatalogueClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         //adding service data
         Object serviceData = jsonPrimaryLevel.get("service");
@@ -106,7 +114,7 @@ public class BioCatalogueClient extends BioCatalogueBaseClient implements BioCat
      * @return
      * @throws BioCatalogueException 
      */
-    public User userData(String userId) throws BioCatalogueException, ParseException {
+    public User userData(String userId) throws BioCatalogueException, ParseException, org.json.simple.parser.ParseException {
         String url = "/users/" + userId;
         HttpURLConnection response = request(url, "GET", 200, "application/json");
         String content = parseResponse(response);

@@ -93,7 +93,7 @@ public class ServiceVariants {
     }
 
     /**
-     * @return the wsdlLocation
+     * @return it returns the wsdl file location
      */
     public String getWsdlLocation() {
         return wsdlLocation;

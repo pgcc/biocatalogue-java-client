@@ -38,7 +38,8 @@ public class ServiceSample {
         client.setBaseUri("https://www.biocatalogue.org");
 
         try {
-            String id = "2016";
+            //String id = "2736";
+            String id = "2602";
             ServiceData serviceData = client.serviceData(id);
             System.out.println(serviceData.getArchivedAt());
             System.out.println(serviceData.getCreatedAt());

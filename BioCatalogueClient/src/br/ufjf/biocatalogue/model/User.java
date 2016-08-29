@@ -44,7 +44,7 @@ public class User {
     }
     
     /**
-     * @return the name
+     * @return return the user name
      */
     public String getName() {
         return name;
@@ -72,7 +72,7 @@ public class User {
     }
 
     /**
-     * @return the public_email
+     * @return return the public email of a specific user
      */
     public String getPublicEmail() {
         return publicEmail;
@@ -114,7 +114,7 @@ public class User {
     }
 
     /**
-     * @return the userLocation
+     * @return return the user location data from a specific user
      */
     public UserLocation getUserLocation() {
         return userLocation;

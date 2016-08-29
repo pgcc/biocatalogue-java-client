@@ -51,6 +51,11 @@ public class ServiceData {
         serviceVariants = new ServiceVariants();
         technologyType = new ArrayList<>();
     }
+    
+    /**
+     * return the service name
+     * @return 
+     */
     public String getName() {
         return name;
     }
@@ -63,7 +68,7 @@ public class ServiceData {
     }
 
     /**
-     * @return the description
+     * @return it returns the service description
      */
     public String getDescription() {
         return description;
@@ -77,7 +82,7 @@ public class ServiceData {
     }
 
     /**
-     * @return the submitter
+     * @return it returns the service submitter
      */
     public String getSubmitter() {
         return submitter;
@@ -91,7 +96,7 @@ public class ServiceData {
     }
 
     /**
-     * @return the createdAt
+     * @return it returns the date that the service was created
      */
     public String getCreatedAt() {
         return createdAt;
@@ -105,7 +110,7 @@ public class ServiceData {
     }
 
     /**
-     * @return the updatedAt
+     * @return it returns the date that the service was updated
      */
     public String getUpdatedAt() {
         return updatedAt;
@@ -119,7 +124,7 @@ public class ServiceData {
     }
 
     /**
-     * @return the archivedAt
+     * @return it returns the date that the service was archived
      */
     public String getArchivedAt() {
         return archivedAt;
@@ -161,7 +166,8 @@ public class ServiceData {
     }
 
     /**
-     * @return the technologyType
+     * @return it returns a arrayList that contains the technology type was used 
+     * (e.g.: SOAP, REST)
      */
     public ArrayList getTechnologyType() {
         return technologyType;

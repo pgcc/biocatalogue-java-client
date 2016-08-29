@@ -34,7 +34,7 @@ public class UserLocation {
     private String city;
 
     /**
-     * @return the country
+     * @return return the country of a specific user
      */
     public String getCountry() {
         return country;
@@ -48,7 +48,7 @@ public class UserLocation {
     }
 
     /**
-     * @return the countryCode
+     * @return return the country code of a specific user
      */
     public String getCountryCode() {
         return countryCode;
@@ -62,7 +62,8 @@ public class UserLocation {
     }
 
     /**
-     * @return the flagImagePNG
+     * @return it returns the address of a png image file related to 
+     * a flag of a country from a specific user
      */
     public String getFlagImagePNG() {
         return flagImagePNG;
@@ -76,7 +77,7 @@ public class UserLocation {
     }
 
     /**
-     * @return the city
+     * @return return the city name of a specific user
      */
     public String getCity() {
         return city;
