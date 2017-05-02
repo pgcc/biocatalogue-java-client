@@ -29,11 +29,18 @@ import br.ufjf.biocatalogue.model.SearchResult;
 import br.ufjf.biocatalogue.model.ServiceData;
 import br.ufjf.biocatalogue.model.User;
 import com.google.gson.Gson;
+import javax.net.ssl.SSLContext;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -43,11 +50,14 @@ import org.json.simple.parser.ParseException;
  *
  * @author vitorfs
  */
-public class BioCatalogueClient extends BioCatalogueBaseClient implements BioCatalogueServices,Serializable {
+public class BioCatalogueClient extends BioCatalogueBaseClient implements BioCatalogueServices, Serializable {
 
     @Override
     public Search search(String q) throws BioCatalogueException {
+
+        disableCertificateValidation();
         String url = "/search?q=" + q;
+
         HttpURLConnection response = request(url, "GET", 200, "application/json");
         String content = parseResponse(response);
         SearchResult result = new Gson().fromJson(content, SearchResult.class);
@@ -56,12 +66,15 @@ public class BioCatalogueClient extends BioCatalogueBaseClient implements BioCat
     
     /**
      * From a serviceId returns data from a web service
+     *
      * @param serviceId
      * @return
      * @throws BioCatalogueException
-     * @throws ParseException 
+     * @throws ParseException
      */
-    public ServiceData serviceData(String serviceId) throws BioCatalogueException, ParseException{
+    public ServiceData serviceData(String serviceId) throws BioCatalogueException, ParseException {
+
+        disableCertificateValidation();        
         String url = "/services/" + serviceId;
         HttpURLConnection response = request(url, "GET", 200, "application/json");
         String content = parseResponse(response);
@@ -71,22 +84,22 @@ public class BioCatalogueClient extends BioCatalogueBaseClient implements BioCat
         } catch (ParseException ex) {
             Logger.getLogger(BioCatalogueClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         //adding service data
         Object serviceData = jsonPrimaryLevel.get("service");
         JSONObject jsonSecondLevel = (JSONObject) serviceData;
-        ServiceData sD = new ServiceData();        
+        ServiceData sD = new ServiceData();
         sD.setSubmitter((String) jsonSecondLevel.get("submitter"));
         sD.setTechnologyType((ArrayList) jsonSecondLevel.get("service_technology_types"));
-        sD.setArchivedAt((String) jsonSecondLevel.get("archived_at"));        
+        sD.setArchivedAt((String) jsonSecondLevel.get("archived_at"));
         sD.setName((String) jsonSecondLevel.get("name"));
         sD.setDescription((String) jsonSecondLevel.get("description"));
         sD.setCreatedAt((String) jsonSecondLevel.get("created_at"));
         sD.setSelf((String) jsonSecondLevel.get("self"));
-        
+
         //adding variants data
         Object variantsData = jsonSecondLevel.get("variants");
-        if(variantsData != null){
+        if (variantsData != null) {
             JSONArray jsonVariantsDataArray = (JSONArray) variantsData;
             JSONObject jsonVariantsData = (JSONObject) jsonVariantsDataArray.get(0);
             sD.getServiceVariants().setSubmitter((String) jsonVariantsData.get("submitter"));
@@ -97,7 +110,7 @@ public class BioCatalogueClient extends BioCatalogueBaseClient implements BioCat
             sD.getServiceVariants().setWsdlLocation((String) jsonVariantsData.get("wsdl_location"));
             sD.getServiceVariants().setDocumentationUrl((String) jsonVariantsData.get("documentation_url"));
         }
-        
+
         //adding last status data
         Object statusData = jsonSecondLevel.get("latest_monitoring_status");
         JSONObject jsonLatestStatus = (JSONObject) statusData;
@@ -107,29 +120,32 @@ public class BioCatalogueClient extends BioCatalogueBaseClient implements BioCat
         sD.getServiceLastStatus().setSmall_symbol((String) jsonLatestStatus.get("small_symbol"));
         return sD;
     }
-    
+
     /**
-     *  Details about a specific bio-catalogue repositoy user
+     * Details about a specific bio-catalogue repositoy user
+     *
      * @param userId the user id
      * @return
-     * @throws BioCatalogueException 
+     * @throws BioCatalogueException
      */
     public User userData(String userId) throws BioCatalogueException, ParseException, org.json.simple.parser.ParseException {
+
+        disableCertificateValidation();        
         String url = "/users/" + userId;
         HttpURLConnection response = request(url, "GET", 200, "application/json");
         String content = parseResponse(response);
         JSONObject jsonPrimaryLevel = (JSONObject) new JSONParser().parse(content);
-        
+
         //adding user data
         Object userData = jsonPrimaryLevel.get("user");
-        JSONObject jsonSecondLevel = (JSONObject) userData; 
-        User user = new User();        
+        JSONObject jsonSecondLevel = (JSONObject) userData;
+        User user = new User();
         user.setName((String) jsonSecondLevel.get("name"));
         user.setAffiliation((String) jsonSecondLevel.get("affiliation"));
         user.setPublicEmail((String) jsonSecondLevel.get("public_email"));
-        user.setJoined((String) jsonSecondLevel.get("joined"));        
+        user.setJoined((String) jsonSecondLevel.get("joined"));
         user.setSelf((String) jsonSecondLevel.get("self"));
-        
+
         //adding location data
         Object userLocationData = jsonSecondLevel.get("location");
         JSONObject jsonLocationLevel = (JSONObject) userLocationData;
@@ -138,5 +154,33 @@ public class BioCatalogueClient extends BioCatalogueBaseClient implements BioCat
         user.getUserLocation().setCountryCode((String) jsonLocationLevel.get("country_code"));
         user.getUserLocation().setFlagImagePNG(((String) jsonLocationLevel.get("flag")));
         return user;
+    }
+    
+        /**
+     * it allows to disable the certificate validation in a HTTPS Connection
+     * BioCatalogue Certificate was invalid in 2017-05-02
+     */
+    public void disableCertificateValidation(){
+        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
+        }};        
+        
+        SSLContext sc;
+        try {
+            sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (NoSuchAlgorithmException | KeyManagementException ex) {
+            Logger.getLogger(BioCatalogueClient.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error in disabling certificate validation in a HTTPS Connection");
+        }
     }
 }
